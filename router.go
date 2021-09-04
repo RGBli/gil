@@ -96,5 +96,6 @@ func (r *router) handle(c *Context) {
 			c.String(http.StatusNotFound, "404 NOT FOUND: %s\n", c.Path)
 		})
 	}
+	// 开启 handler chain
 	c.Next()
 }

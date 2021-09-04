@@ -1,8 +1,29 @@
 # Gil 一个 Golang 实现的 Web 框架
 ---
 
-### 使用方法
-与 Gin 几乎相同
+### 功能亮点
+1）GET、POST 方法用于设置 handler 处理的请求的方法
+
+2）Next()、Abort()、Set()、Get() 方法用于管理上下文
+
+3）支持中间件
+
+4）支持分组路由
+
+5）支持动态路由
+
+</br>
+
+### 简单例子
+``` go
+func main() {
+    engine := gil.New()
+    engine.GET("/", func(c *gil.Context) {
+        c.String("hello")
+    })
+    engine.Run(":8080")
+}
+```
 
 </br>
 

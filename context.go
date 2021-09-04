@@ -3,8 +3,11 @@ package gil
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 )
+
+const abortIndex int = math.MaxInt64
 
 type H map[string]interface{}
 
@@ -16,12 +19,14 @@ type Context struct {
 	Path   string
 	Method string
 	// 动态路由的对应关系
-	Params map[string]string
+	Params     map[string]string
 	StatusCode int
 	// handlers 包括处理逻辑和 middleware
 	handlers []HandlerFunc
 	// 记录当前执行到第几个中间件
-	index    int
+	index int
+	// 中间件传递 K-V
+	values map[string]interface{}
 }
 
 func newContext(w http.ResponseWriter, req *http.Request) *Context {
@@ -31,6 +36,7 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 		Req:    req,
 		Writer: w,
 		index:  -1,
+		values: make(map[string]interface{}),
 	}
 }
 
@@ -41,6 +47,10 @@ func (c *Context) Next() {
 	for ; c.index < handlersNum; c.index++ {
 		c.handlers[c.index](c)
 	}
+}
+
+func (c *Context) Abort() {
+	c.index = abortIndex
 }
 
 func (c *Context) Fail(code int, err string) {
@@ -94,4 +104,12 @@ func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
 	c.Writer.Write([]byte(html))
+}
+
+func (c *Context) Set(key string, value interface{}) {
+	c.values[key] = value
+}
+
+func (c *Context) Get(key string) interface{} {
+	return c.values[key]
 }
