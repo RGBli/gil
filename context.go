@@ -7,7 +7,8 @@ import (
 	"net/http"
 )
 
-const abortIndex int = math.MaxInt64
+// 最多允许 2^62 个 handler
+const abortIndex int = math.MaxInt64 >> 1
 
 type H map[string]interface{}
 
@@ -43,9 +44,9 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 // 为 middleware 设计，十分巧妙
 func (c *Context) Next() {
 	c.index++
-	handlersNum := len(c.handlers)
-	for ; c.index < handlersNum; c.index++ {
+	for c.index < len(c.handlers) {
 		c.handlers[c.index](c)
+		c.index++
 	}
 }
 
@@ -80,12 +81,14 @@ func (c *Context) SetHeader(key string, value string) {
 	c.Writer.Header().Set(key, value)
 }
 
+// 返回字符串
 func (c *Context) String(code int, format string, values ...interface{}) {
 	c.SetHeader("Content-Type", "text/plain")
 	c.Status(code)
 	c.Writer.Write([]byte(fmt.Sprintf(format, values...)))
 }
 
+// 返回 json
 func (c *Context) JSON(code int, obj interface{}) {
 	c.SetHeader("Content-Type", "application/json")
 	c.Status(code)
@@ -95,11 +98,13 @@ func (c *Context) JSON(code int, obj interface{}) {
 	}
 }
 
+// 返回字节数组
 func (c *Context) Data(code int, data []byte) {
 	c.Status(code)
 	c.Writer.Write(data)
 }
 
+// 返回 HTML 页面
 func (c *Context) HTML(code int, html string) {
 	c.SetHeader("Content-Type", "text/html")
 	c.Status(code)
