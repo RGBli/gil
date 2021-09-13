@@ -16,9 +16,11 @@
 
 ### 简单例子
 ``` go
+import "github.com/RGBli/Gil"
+
 func main() {
-    engine := gil.New()
-    engine.GET("/", func(c *gil.Context) {
+    engine := Gil.New()
+    engine.GET("/", func(c *Gil.Context) {
         c.String("hello")
     })
     engine.Run(":8080")
