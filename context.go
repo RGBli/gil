@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math"
+	"mime/multipart"
 	"net/http"
 )
 
@@ -64,12 +65,16 @@ func (c *Context) Param(key string) string {
 	return value
 }
 
+func (c *Context) Query(key string) string {
+	return c.Req.URL.Query().Get(key)
+}
+
 func (c *Context) PostForm(key string) string {
 	return c.Req.FormValue(key)
 }
 
-func (c *Context) Query(key string) string {
-	return c.Req.URL.Query().Get(key)
+func (c *Context) FormFile(key string) (multipart.File, *multipart.FileHeader, error) {
+	return c.Req.FormFile(key)
 }
 
 func (c *Context) Status(code int) {
