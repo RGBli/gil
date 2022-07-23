@@ -20,12 +20,12 @@
 
 ### 简单例子
 ``` go
-import "github.com/RGBli/Gil"
+import "github.com/RGBli/gil"
 
 func main() {
-    engine := Gil.New()
+    engine := gil.New()
     engine.GET("/", func(c *Gil.Context) {
-        c.String("hello")
+        c.String("Hello gil")
     })
     engine.Run(":8080")
 }
