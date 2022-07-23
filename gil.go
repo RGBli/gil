@@ -6,18 +6,18 @@ import (
 	"strings"
 )
 
-// HandlerFunc 定义了 gee 框架的 handler 函数
+// HandlerFunc 定义了 gil 框架的 handler 函数
 type HandlerFunc func(*Context)
 
 type (
 	RouterGroup struct {
-		prefix      string
+		prefix string
 		// 支持中间件，中间件是应用在 RouterGroup 上的
 		middlewares []HandlerFunc
 		// 支持分组嵌套
-		parent      *RouterGroup
+		parent *RouterGroup
 		// 所有路由组共享一个 Engine 实例
-		engine      *Engine
+		engine *Engine
 	}
 
 	// Engine 继承了 RouterGroup，并实现了 http.Handler接口

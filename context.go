@@ -3,6 +3,7 @@ package gil
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/RGBli/gil/binding"
 	"math"
 	"mime/multipart"
 	"net/http"
@@ -75,6 +76,11 @@ func (c *Context) PostForm(key string) string {
 
 func (c *Context) FormFile(key string) (multipart.File, *multipart.FileHeader, error) {
 	return c.Req.FormFile(key)
+}
+
+func (c *Context) Bind(obj interface{}) error {
+	b := binding.Default(c.Req.Method, c.Req.Header.Get("content-type"))
+	return b.Bind(c.Req, obj)
 }
 
 func (c *Context) Status(code int) {
