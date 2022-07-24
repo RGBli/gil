@@ -24,7 +24,7 @@ import "github.com/RGBli/gil"
 
 func main() {
     engine := gil.New()
-    engine.GET("/", func(c *Gil.Context) {
+    engine.GET("/", func(c *gil.Context) {
         c.String("Hello gil")
     })
     engine.Run(":8080")

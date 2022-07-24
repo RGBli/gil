@@ -11,7 +11,12 @@ const (
 	MIMEMultipartPOSTForm = "multipart/form-data"
 )
 
-var decoder = schema.NewDecoder()
+var decoder *schema.Decoder
+
+func init() {
+	decoder = schema.NewDecoder()
+	decoder.SetAliasTag("form")
+}
 
 func Default(method, contentType string) Binding {
 	if method == http.MethodGet {

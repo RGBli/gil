@@ -4,7 +4,10 @@ import (
 	"net/http"
 )
 
-const defaultMemory = 32 << 20
+const (
+	defaultMemory = 32 << 20
+	formTag       = "form"
+)
 
 type FormBinding struct{}
 
